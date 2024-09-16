@@ -1,81 +1,77 @@
-import React, { useState, useEffect } from 'react';
-import { TreeTable } from 'primereact/treetable';
-import { Column } from 'primereact/column';
-import { TreeNode } from 'primereact/treenode';
-import 'primereact/resources/primereact.min.css';
-import 'primereact/resources/themes/saga-blue/theme.css';
-import 'primeicons/primeicons.css';
-import useNetworkService from '../Network/NetworkServise';
+import { useState } from "react";
+import * as React from 'react';
 
+  
+  
+ 
 interface ColumnMeta {
     field: string;
     header: string;
+    type?:string;
     expander?: boolean;
+    selectKind?:string;
+    selectKindMessage?:{option:string}[];
+    option1?:string;
+    edit:boolean
+}
+interface TableProps{
+    columns:ColumnMeta[];
+    nodes:never[];
+    intialValues:never[];
+    setIntialValues:any;
 }
 
-interface Product {
-    id: string;
-    itCenterCode: string;
-    name: string;
-    nameGovernorate: string;
-    goveronrateDirationName: string;
-    comprehensiveHealthInsurance: boolean;
-    isActive: boolean;
-    quantity: number;
-    inventoryStatus: string;
-    rating: number;
-}
 
-export default function DynamicColumnsDemo() {
-    const columns: ColumnMeta[] = [
-        { field: 'name', header: 'اسم الادارة', expander: true },
-        { field: 'itCenterCode', header: 'كود مركز المعلومات' },
-        { field: 'nameGovernorate', header: 'المحافظة' },
-        { field: 'goveronrateDirationName', header: 'وجهة المحافظة' },
-        { field: 'comprehensiveHealthInsurance', header: 'داخل التأمين الصحي الشامل' },
-        { field: 'isActive', header: 'الحالة' },
-        { field: 'type', header: 'اختيارات' },
-    ];
-
-    const { getData } = useNetworkService();
-    const [nodes, setNodes] = useState<TreeNode[]>([]);
-
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await getData();
-                const treeData: TreeNode[] = result.districtsOnPage.map((item: Product) => {
-                    console.log(item);
-                    
-                    return {
-                    key: item.id,
-                    data: {
-                        name: item.name,
-                        itCenterCode: item.itCenterCode,
-                        nameGovernorate: item.nameGovernorate,
-                        governonrateDirationName: item.goveronrateDirationName,
-                        comprehensiveHealthInsurance: item.comprehensiveHealthInsurance?'نشط':'غير نشط',
-                        isActive: item.isActive?'نشط':'غير نشط',
-                    },
-                    icon: 'pi pi-fw pi-home', // يمكنك تخصيص الأيقونة
-                    // أضف خصائص children إذا كان لديك عقد فرعية
-                }});
-                setNodes(treeData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, [getData]);
+export default function DynamicColumnsDemo({columns,nodes,setOpenModal,setItem}:TableProps) {
+  
+   
+    const onClickEdit=(data:any)=> {
+        setOpenModal(true)
+        setItem(data)
+    }
+   
 
     return (
-        <div className="card">
-            <TreeTable value={nodes} tableStyle={{ minWidth: '50rem' }}>
-                {columns.map((col) => (
-                    <Column key={col.field} field={col.field} header={col.header} expander={col.expander} />
+       
+<>
+<div className="relative overflow-x-auto shadow-md sm:rounded-lg w-full">
+    <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+        <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                {columns.map((item,index)=>(
+                      <th key={`tableHead-${index}`} scope="col" className="px-6 py-3">
+                      {item.header}
+                  </th>
                 ))}
-            </TreeTable>
-        </div>
+            </tr>
+        </thead>
+        <tbody>
+          {nodes.map((item,index)=>(
+            <tr key={`tableBody-${index}`} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+            {columns.map((field,index2)=>(
+                // we did not use div because it can not be child of tr
+              <React.Fragment key={`td-${index2}`}>
+                            {typeof(item[field.field]) == "boolean"&&field.option1!=="button"&&<td className="px-6 py-4">
+              {item[field.field]?field.selectKindMessage[0].option:field.selectKindMessage[1].option}
+          </td>}
+          {typeof(item[field.field]) !== "boolean"&&field.option1!=="button"&&<td className="px-6 py-4">
+              {item[field.field]}
+          </td>}
+          {(field.option1=="button")&&<td className="px-6 py-4 text-right">
+                    <button className="font-medium text-blue-600 dark:text-blue-500 bg-transparent" onClick={() => onClickEdit(item)}>Edit</button>
+                </td>}
+              </React.Fragment>
+
+          
+            ))}
+        </tr>
+          ))}
+        </tbody>
+    </table>
+</div>
+      
+</>
+
+
     );
 }

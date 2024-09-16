@@ -12,7 +12,7 @@ import { IoIosLogOut } from "react-icons/io";
 
 
 export default function Sisebar() {
-    const [open,setOpen] = useState(true);
+    const [open,setOpen] = useState(false);
     const [submenuOpen,setSubmenuOpen] = useState(false);
     const Menus =[
         {title:"Dashboard"},
@@ -35,7 +35,7 @@ export default function Sisebar() {
     ]
     return (
         <div className="flex">
-            <div className={`bg-dark-pruple h-screen p-5 pt-8 duration-300 ${open? "w-72" : "w-20"} relative`}>
+            <div className={`bg-dark-pruple min-h-screen p-5 pt-8 duration-300 ${open? "w-72" : "w-20"} relative z-50`}>
                 <BsArrowRight className={`bg-white text-3xl rounded-full absolute -left-3 top-9 border border-dark-pruple
                 cursor-pointer ${!open && "rotate-180"}`} onClick={()=>{setOpen(!open)}}/>
 
@@ -48,8 +48,8 @@ export default function Sisebar() {
             </div>
             <ul className="pt-2">
             {Menus.map((menu,index)=>
-            <>
-                <li key={index} className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2
+            <div key={index}>
+                <li key={`menu-${index}`} className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2
                 hover:bg-light-white rounded-md ${menu.spacing?"mt-9" : "mt-2"}`}>
                     <span className="text-2xl block float-left">
                     {menu.icon? menu.icon : <MdDashboard/>}
@@ -62,17 +62,17 @@ export default function Sisebar() {
                     )}
                 </li>
                 {menu.submenu && submenuOpen && open && (
-                    <ul>
-                        {menu.submenuItems.map((submenuItem,index)=>(
+                    <ul key={`submenu-${index}`}>
+                        {menu.submenuItems.map((submenuItem,index2)=>(
 
-                            <li key={index} className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer
+                            <li key={`submenu-${index}-${index2}`} className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer
                              p-2 px-5 hover:bg-light-white rounded-md duration-300">
                                 {submenuItem.title}
                             </li>
                         ))}
                     </ul>
                 )}
-            </>
+            </div>
             )}
             </ul>
             </div>

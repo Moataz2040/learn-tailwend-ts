@@ -1,15 +1,10 @@
 import './App.css'
-import Sidebar from "./component/Sidebar/Sidebar"
-import Table from "./component/Table/table"
+import AllDistricts from './pages/allDistricts/allDistricts'
 function App() {
 
   return (
     <>
-    <div className='container flex'>
-    <Sidebar/>
-    <Table/>
-    </div>
-    
+    <AllDistricts/>
     </>
   )
 }
