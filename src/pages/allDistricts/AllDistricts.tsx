@@ -28,30 +28,53 @@ export default function AllDistricts() {
         { field: 'type', header: 'اختيارات' ,option1:'button',edit:false},
     ];
     interface MyFormValues {
+      id:number;
       name: string;
       itCenterCode: string;
       nameGovernorate: string;
+      idGovernorate:number;
       goveronrateDirationName: string;
       comprehensiveHealthInsurance: string;
       isActive: string;
     }
 
-    const { getData } = useNetworkService();
+    const { getData,updateData } = useNetworkService();
     const [nodes, setNodes] = useState([]);
-    const [intialValues, setIntialValues] = useState({
-      name: 'bsdgsdg',
+    const [openModal, setOpenModal] = useState(false);
+    const [item, setItem] = useState<MyFormValues>({
+      id:0,
+      name:'',
       itCenterCode: '',
       nameGovernorate: '',
+      idGovernorate:0,
       goveronrateDirationName: '',
       comprehensiveHealthInsurance: '',
       isActive: '',
     });
-    const [openModal, setOpenModal] = useState(false);
-    const [item, setItem] = useState({});
+    const [intialValues, setIntialValues] = useState({
+      id:0,
+      name: '',
+      itCenterCode: '',
+      nameGovernorate: '',
+      idGovernorate:0,
+      goveronrateDirationName: '',
+      comprehensiveHealthInsurance: '',
+      isActive: '',
+    });
+
     useEffect(() => {
       getData().then(data=>setNodes(data.districtsOnPage))
       console.log(item);
-      
+      setIntialValues({
+        id:item.id,
+        name: item.name,
+        itCenterCode: item.itCenterCode,
+        nameGovernorate: item.nameGovernorate,
+        idGovernorate: item.idGovernorate,
+        goveronrateDirationName: item.goveronrateDirationName,
+        comprehensiveHealthInsurance: item.comprehensiveHealthInsurance,
+        isActive: item.isActive,
+      })      
       
     }, [item]);
 
@@ -60,11 +83,28 @@ export default function AllDistricts() {
  function onCloseModal() {
       setOpenModal(false);
     }
+    function update(values:MyFormValues) {
+      console.log(values);
+      let data ={
+        "itCenterCode": values.itCenterCode,
+        "name": values.name,
+        "comprehensiveHealthInsurance": values.comprehensiveHealthInsurance,
+        "idGovernorate": values.idGovernorate,
+        "isActive": values.isActive,
+        "createdBy": "string",
+        "createdDate": "2024-09-20T12:36:25.185Z",
+        "updatedBy": "string",
+        "updatedDate": "2024-09-20T12:36:25.185Z"
+      }
+      updateData(data,values.id)
+    }
  const formik = useFormik({
+  // to make intial values change with every state change [intialValues,setIntialValues]
+  enableReinitialize: true,
         initialValues: intialValues,
         onSubmit: values => {
           console.log(values);
-          
+          update(values)
         },
       });
   return (
@@ -104,7 +144,7 @@ export default function AllDistricts() {
             </React.Fragment>
          ))}
 
-            <Button className="mt-3" type="submit">تعديل</Button>
+            <Button className="mt-3" type="submit" >تعديل</Button>
          </form>
 
         </Modal.Body>
