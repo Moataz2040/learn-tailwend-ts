@@ -1,5 +1,4 @@
 Image Laptop:
-![screencapture-localhost-5173-2024-10-06-17_30_58](https://github.com/user-attachments/assets/029831e9-1417-4428-910b-50f38bb53cf9)
 Image with responsive mobiles:
 ![screencapture-localhost-5173-2024-10-06-17_32_04](https://github.com/user-attachments/assets/6ac83a8c-14db-4da3-aa11-69a412cc14c1)
 
