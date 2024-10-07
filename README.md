@@ -1,6 +1,5 @@
 Image Laptop:
 Image with responsive mobiles:
-![screencapture-localhost-5173-2024-10-06-17_32_04](https://github.com/user-attachments/assets/6ac83a8c-14db-4da3-aa11-69a412cc14c1)
 
 
 
